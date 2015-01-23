@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 10:04:06 by amulin            #+#    #+#             */
-/*   Updated: 2015/01/19 18:22:12 by amulin           ###   ########.fr       */
+/*   Updated: 2015/01/23 16:28:50 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 typedef	struct	s_keep
 {
 	char	**str;
-	int		*fdcheck;
 	int		fdmax;
 }				t_keep;
 
