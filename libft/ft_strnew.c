@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/20 11:50:59 by amulin            #+#    #+#             */
-/*   Updated: 2014/11/20 12:37:04 by amulin           ###   ########.fr       */
+/*   Updated: 2015/01/27 17:45:18 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ char	*ft_strnew(size_t size)
 {
 	char	*s;
 
-	s = (char*)malloc(sizeof(*s) * (size + 1));
+	s = (char*)ft_memalloc(sizeof(*s) * (size + 1));
+	if (s == NULL)
+		return (NULL);
 	return (s);
 }
