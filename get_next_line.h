@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 10:04:06 by amulin            #+#    #+#             */
-/*   Updated: 2015/01/23 16:28:50 by amulin           ###   ########.fr       */
+/*   Updated: 2015/01/28 16:40:02 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # define BUFF_SIZE 32
 # include "libft.h"
 
-typedef	struct	s_keep
+typedef	struct	s_hold
 {
 	char	**str;
 	int		fdmax;
-}				t_keep;
+}				t_hold;
 
 int				get_next_line(int const fd, char **line);
 
