@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 10:04:06 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/02 15:29:04 by amulin           ###   ########.fr       */
+/*   Updated: 2015/02/05 18:48:02 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 typedef	struct	s_hold
 {
-	char	**str;
+	char	*str;
 	int		fdmax;
 }				t_hold;
 

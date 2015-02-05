@@ -6,11 +6,44 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 11:04:13 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/05 18:48:30 by amulin           ###   ########.fr       */
+/*   Updated: 2015/02/05 18:39:58 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+
+int		gnl_createkeep(int const fd, t_hold *keep)
+{
+	t_hold	copy;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	copy = *keep;
+	keep->str = NULL;
+	keep->str = (char**)malloc(sizeof(char*) * fd);
+	tmp = ft_strnew(0);
+	if (tmp == NULL || keep->str == NULL)
+		return (-1);
+	printf("GNL >> gnl_createkeep : Malloc keep->str and tmp success\n");
+	keep->fdmax = fd;
+	while (i <= fd)
+	{
+		printf("GNL >> gnl_createkeep : loop run %d\n", i);
+		keep->str[i] = NULL;
+		printf("GNL >> gnl_createkeep : loop keep->str[i] = NULL\n");
+		if (copy.str[i] != NULL)
+		{
+			printf("GNL >> gnl_createkeep : loop condition entered\n");
+			keep->str[i] = copy.str[i];
+		}
+		printf("GNL >> gnl_createkeep : loop, after condition\n");
+		i++;
+	}
+	keep->str[fd] = tmp;
+	return (0);
+}
 
 int		gnl_lenline(const char *s)
 {
@@ -78,6 +111,13 @@ int		get_next_line(int const fd, char **line)
 	char			*tmp;
 	ssize_t			ret;
 
+	if (!(fd <= keep.fdmax && keep.str[fd] != NULL))
+	{
+		printf("GNL >> New fd, expanding t_hold\n");
+		if (gnl_createkeep(fd, &keep) == -1)
+			return (-1);
+	}
+	printf("GNL >> t_hold long enough or successfully expanded\n");
 	tmp = ft_strdup(keep.str[fd]);
 	if (tmp == NULL)
 		return (-1);
