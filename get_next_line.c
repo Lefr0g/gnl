@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 11:04:13 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/02 16:41:05 by amulin           ###   ########.fr       */
+/*   Updated: 2015/02/05 16:25:32 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		gnl_createkeep(int const fd, t_hold *keep)
 	int		i;
 
 	i = 0;
-	&copy = keep;
+	copy = *keep;
 	keep->str = NULL;
 	keep->str = (char**)malloc(sizeof(char*) * fd);
 	tmp = ft_strnew(0);
@@ -39,7 +39,7 @@ int		gnl_createkeep(int const fd, t_hold *keep)
 	return (0);
 }
 
-size_t	gnl_lenline(const char *s)
+int		gnl_lenline(const char *s)
 {
 	int	i;
 
@@ -53,7 +53,7 @@ size_t	gnl_lenline(const char *s)
 	return (i);
 }
 
-int		gnl_read(ssize_t *ret, int const *fd, char *tmp)
+int		gnl_read(ssize_t *ret, int const *fd, char **tmp)
 {
 	char	*flash;
 	char	*buff;
@@ -62,25 +62,25 @@ int		gnl_read(ssize_t *ret, int const *fd, char *tmp)
 	if (buff == NULL)
 		return (-1);
 	*ret = BUFF_SIZE;
-	while (gnl_lenline(tmp) == -1 && *ret == BUFF_SIZE)
+	while (gnl_lenline(*tmp) == -1 && *ret == BUFF_SIZE)
 	{
 		*ret = read(*fd, buff, BUFF_SIZE);
-		if (ret == -1)
+		if (*ret == -1)
 			return (-1);
 		buff[*ret] = '\0';
-		flash = tmp;
-		tmp = ft_strnew(ft_strlen(flash) + BUFF_SIZE);
+		flash = *tmp;
+		*tmp = ft_strnew(ft_strlen(flash) + BUFF_SIZE);
 		if (tmp == NULL)
 			return (-1);
-		ft_strcpy(tmp, flash);
-		ft_strcat(tmp, buff);
+		ft_strcpy(*tmp, flash);
+		ft_strcat(*tmp, buff);
 		ft_strdel(&flash);
 	}
 	ft_strdel(&buff);
 	return (0);
 }
 
-int		gnl_write(char **tmp; char **line, t_hold *keep, int const fd)
+int		gnl_write(char **tmp, char **line, t_hold *keep, int const fd)
 {
 	int	i;
 
@@ -105,21 +105,19 @@ int		get_next_line(int const fd, char **line)
 	char			*tmp;
 	ssize_t			ret;
 
-
 	if (!(fd <= keep.fdmax && keep.str[fd] != NULL))
 	{
 		if (gnl_createkeep(fd, &keep) == -1)
 			return (-1);
 	}
+	tmp = ft_strdup(keep.str[fd]);
+	if (tmp == NULL)
+		return (-1);
+	if (gnl_read(&ret, &fd, &tmp) == -1)
+		return (-1);
+	gnl_write(&tmp, line, &keep, fd);
+	if (ret == BUFF_SIZE && keep.str[fd] != '\0')
+		return (1);
 	else
-	{
-		tmp = ft_strdup(keep.str[fd]);
-		if (tmp == NULL)
-			return (-1);
-		if (gnl_read(&ret, &fd, &tmp) == -1)
-			return (-1);
-		gnl_write(&tmp, line, &keep, fd);
-		
-	}
+		return (0);
 }
-
