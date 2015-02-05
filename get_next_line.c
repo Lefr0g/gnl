@@ -20,22 +20,22 @@ int		gnl_createkeep(int const fd, t_hold *keep)
 
 	i = 0;
 	&copy = keep;
-	keep.str = NULL;
-	keep.str = (char**)malloc(sizeof(char*) * fd);
+	keep->str = NULL;
+	keep->str = (char**)malloc(sizeof(char*) * fd);
 	tmp = ft_strnew(0);
 	if (tmp == NULL)
 		return (-1);
-	keep.fdmax = fd;
+	keep->fdmax = fd;
 	while (i <= fd)
 	{
-		keep.str[i] = NULL;
+		keep->str[i] = NULL;
 		if (copy.str[i] != NULL)
 		{
-			keep.str[i] = copy.str[i];
+			keep->str[i] = copy.str[i];
 		}
 		i++;
 	}
-	keep.str[fd] = tmp;
+	keep->str[fd] = tmp;
 	return (0);
 }
 
@@ -80,7 +80,7 @@ int		gnl_read(ssize_t *ret, int const *fd, char *tmp)
 	return (0);
 }
 
-int		gnl_write(char **tmp; char **line, t_hold keep, int const fd)
+int		gnl_write(char **tmp; char **line, t_hold *keep, int const fd)
 {
 	int	i;
 
@@ -90,8 +90,8 @@ int		gnl_write(char **tmp; char **line, t_hold keep, int const fd)
 		*line = ft_strsub(*tmp, 0, i);
 		if (*line == NULL)
 			return (-1);
-		ft_strdel(&keep.str[fd]);
-		keep.str[fd] = ft_strdup(tmp[i]);
+		ft_strdel(&keep->str[fd]);
+		keep->str[fd] = ft_strdup(tmp[i]);
 	}
 	else
 		*line = ft_strdup(*tmp);
@@ -101,7 +101,7 @@ int		gnl_write(char **tmp; char **line, t_hold keep, int const fd)
 
 int		get_next_line(int const fd, char **line)
 {
-	static t_hold	keep;
+	static t_hold	keep = {NULL, -1};
 	char			*tmp;
 	ssize_t			ret;
 
@@ -118,7 +118,7 @@ int		get_next_line(int const fd, char **line)
 			return (-1);
 		if (gnl_read(&ret, &fd, &tmp) == -1)
 			return (-1);
-		gnl_write(&tmp, line, keep, fd);
+		gnl_write(&tmp, line, &keep, fd);
 		
 	}
 }
