@@ -13,14 +13,54 @@
 #include "libft.h"
 #include <fcntl.h>
 #include "get_next_line.h"
+#include <stdio.h>
+
+int	run_gnl(int fd, char **line)
+{
+	int	ret;
+	int	i;
+
+	ft_putstr("Main >> Testing GNL on file descriptor ");
+	ft_putnbr(fd);
+	ft_putstr(" ...\n");
+	i = 0;
+	ret = get_next_line(fd, line);
+	ft_putstr("Main >> First GNL success\n");
+	while (ret == 1)
+	{
+		ft_putstr("Main >> GNL run ");
+		ft_putnbr(i);
+		ft_putstr(", line read gives : '");
+		ft_putstr(*line);
+		ft_putstr("'\n");
+		ret = get_next_line(fd, line);
+		i++;
+	}
+	if (ret == 0)
+	{
+		ft_putstr("Main >> GNL run ");
+		ft_putnbr(i);
+		ft_putstr(", line read gives : '");
+		ft_putstr(*line);
+		ft_putstr("'\n");
+		ft_putstr("Main >> GNL returns 0, read over\n");
+	}
+	if (ret == -1)
+		ft_putstr("Main >> GNL returns -1, error\n");
+	return (0);
+}
 
 int	main(int argc, char **argv)
 {
 	int		fd;
-	int		i;
 	char	*line;
-	int		ret;
 
+	line = ft_strnew(BUFF_SIZE);
+	ft_strcpy(line, "Hello");
+	ft_putstr("Main >> Line variable initialized to '");
+	ft_putstr(line);
+	ft_putstr("'\n");
+	printf("Main >> Address of line is : %p\n", line);
 	if (argc != 2)
 	{
 		if (argc == 1)
@@ -41,26 +81,7 @@ int	main(int argc, char **argv)
 	ft_putstr("Main >> File successfully opened on fd = ");
 	ft_putnbr(fd);
 	ft_putchar('\n');
-
-	ft_putstr("Main >> Testing GNL on this file descriptor...\n");
-	i = 0;
-	ret = get_next_line(fd, &line);
-	while (ret == 1)
-	{
-		ft_putstr("Main >> GNL run ");
-		ft_putnbr(i);
-		ft_putstr(", line read gives : ");
-		ft_putstr(line);
-		ft_putstr("\n");
-		ret = get_next_line(fd, &line);
-		i++;
-	}
-	if (ret == 0)
-		ft_putstr("Main >> GNL returns 0, read over\n");
-	if (ret == -1)
-		ft_putstr("Main >> GNL returns -1, error");
-//
-
+	run_gnl(fd, &line);
 	ft_putstr("Main >> Closing file...\n");
 	if (close(fd) != 0)
 	{
@@ -68,6 +89,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_putstr("Main >> File successfully closed.\n");
+	ft_putstr("Main >> Attempting GNL on stdin.\n");
+	run_gnl(0, &line);
 	ft_putstr("Main >> Test completed, end of program.\n");
 	return (0);
 }
