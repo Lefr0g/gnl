@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/19 11:04:13 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/07 14:54:03 by amulin           ###   ########.fr       */
+/*   Updated: 2015/02/07 15:54:48 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		gnl_read(ssize_t *ret, int const *fd, char **tmp)
 	char	*buff;
 
 	buff = ft_strnew(BUFF_SIZE);
-	if (buff == NULL)
+	if (buff == NULL || *fd == 1)
 		return (-1);
 	*ret = BUFF_SIZE;
 	while (gnl_lenline(*tmp) == -1 && *ret == BUFF_SIZE)
@@ -53,24 +53,24 @@ int		gnl_read(ssize_t *ret, int const *fd, char **tmp)
 	return (0);
 }
 
-int		gnl_write(char **tmp, char **line, t_hold *keep)
+int		gnl_write(char **tmp, char **line, char **keep)
 {
 	int	i;
 
 	i = gnl_lenline(*tmp);
-	ft_strdel(line);
+	*line = NULL;
 	if (i != -1)
 	{
 		*line = ft_strsub(*tmp, 0, i);
 		if (*line == NULL)
 			return (-1);
-		ft_strdel(&(keep->str));
-		keep->str = ft_strdup(&tmp[0][i + 1]);
+		ft_strdel(keep);
+		*keep = ft_strdup(&tmp[0][i + 1]);
 	}
 	else
 	{
 		*line = ft_strdup(*tmp);
-		ft_strdel(&(keep->str));
+		ft_strdel(keep);
 	}
 	ft_strdel(tmp);
 	return (0);
@@ -78,19 +78,19 @@ int		gnl_write(char **tmp, char **line, t_hold *keep)
 
 int		get_next_line(int const fd, char **line)
 {
-	static t_hold	keep = {NULL, -1};
-	char			*tmp;
-	ssize_t			ret;
+	static char	*keep = NULL;
+	char		*tmp;
+	ssize_t		ret;
 
 	tmp = ft_strnew(BUFF_SIZE);
 	if (tmp == NULL)
 		return (-1);
-	if (keep.str)
-		tmp = ft_strdup(keep.str);
+	if (keep)
+		tmp = ft_strdup(keep);
 	if (gnl_read(&ret, &fd, &tmp) == -1)
 		return (-1);
 	gnl_write(&tmp, line, &keep);
-	if (ret != BUFF_SIZE && keep.str == NULL)
+	if (ret != BUFF_SIZE && keep == NULL)
 		return (0);
 	else
 		return (1);
