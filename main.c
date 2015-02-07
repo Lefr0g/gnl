@@ -6,7 +6,7 @@
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/05 16:27:47 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/05 17:38:44 by amulin           ###   ########.fr       */
+/*   Updated: 2015/02/07 12:46:18 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	run_gnl(int fd, char **line)
 	{
 		ft_putstr("Main >> GNL run ");
 		ft_putnbr(i);
-		ft_putstr(", line read gives : '");
+		ft_putstr(", GNL returns 1, line read gives : '");
 		ft_putstr(*line);
 		ft_putstr("'\n");
 		ret = get_next_line(fd, line);
@@ -40,10 +40,10 @@ int	run_gnl(int fd, char **line)
 	{
 		ft_putstr("Main >> GNL run ");
 		ft_putnbr(i);
-		ft_putstr(", line read gives : '");
+		ft_putstr(", GNL returns 0, line read gives : '");
 		ft_putstr(*line);
 		ft_putstr("'\n");
-		ft_putstr("Main >> GNL returns 0, read over\n");
+		ft_putstr("Main >> GNL returned 0, read over\n");
 	}
 	if (ret == -1)
 		ft_putstr("Main >> GNL returns -1, error\n");
@@ -89,8 +89,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_putstr("Main >> File successfully closed.\n");
-	ft_putstr("Main >> Attempting GNL on stdin.\n");
-	run_gnl(0, &line);
-	ft_putstr("Main >> Test completed, end of program.\n");
+//	ft_putstr("Main >> Attempting GNL on stdin.\n");
+//	run_gnl(0, &line);
+//	ft_putstr("Main >> Test completed, end of program.\n");
 	return (0);
 }
