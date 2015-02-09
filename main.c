@@ -34,6 +34,7 @@ int	run_gnl(int fd, char **line)
 		ft_putstr(*line);
 		ft_putstr("'\n");
 		ret = get_next_line(fd, line);
+//		printf("Main >> run_gnl loop, i = %d\n", i);
 		i++;
 	}
 	if (ret == 0)
@@ -48,6 +49,19 @@ int	run_gnl(int fd, char **line)
 	if (ret == -1)
 		ft_putstr("Main >> GNL returns -1, error\n");
 	return (0);
+}
+
+void	run_read_stdin(void)
+{
+	int		buffsize;
+	int		ret;
+	char	*buff;
+
+	buffsize = 30;
+	buff = ft_strnew(buffsize);
+	ret = read(0, buff, buffsize);
+	printf("(TBDel)Main >> ret = %d\n", ret);
+	printf("(TBDel)Main >> buff contains '%s'\n", buff);
 }
 
 int	main(int argc, char **argv)
@@ -89,8 +103,14 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_putstr("Main >> File successfully closed.\n");
-//	ft_putstr("Main >> Attempting GNL on stdin.\n");
-//	run_gnl(0, &line);
-//	ft_putstr("Main >> Test completed, end of program.\n");
+/*
+	ft_putstr("(TBDel)Main >> Read from stdin test start\n");
+	run_read_stdin();
+	ft_putstr("(TBDel)Main >> Read from stdin test over\n");
+	
+	ft_putstr("Main >> Attempting GNL on stdin.\n");
+	run_gnl(0, &line);
+	ft_putstr("Main >> Test completed, end of program.\n");
+*/
 	return (0);
 }

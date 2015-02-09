@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main_speedtest.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amulin <amulin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/01/19 10:04:06 by amulin            #+#    #+#             */
-/*   Updated: 2015/02/07 16:02:31 by amulin           ###   ########.fr       */
+/*   Created: 2015/02/05 16:27:47 by amulin            #+#    #+#             */
+/*   Updated: 2015/02/07 12:46:18 by amulin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
 
-# define BUFF_SIZE 65
-# include "libft.h"
-# include <unistd.h>
+int	main(int ac, char **av)
+{
+	char	*line;
+	int		fd;
 
-int				get_next_line(int const fd, char **line);
-
-#endif
+	(void)ac;
+	(void)av;
+	fd = open(av[1], O_RDONLY);
+	while (get_next_line(fd, &line) == 1)
+		printf("%s\n", line);
+	return (0);
+}

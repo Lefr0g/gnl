@@ -62,16 +62,12 @@ int		gnl_write(char **tmp, char **line, char **keep)
 	if (i != -1)
 	{
 		*line = ft_strsub(*tmp, 0, i);
-		if (*line == NULL)
-			return (-1);
-		ft_strdel(keep);
 		*keep = ft_strdup(&tmp[0][i + 1]);
+		if (*line == NULL || *keep == NULL)
+			return (-1);
 	}
 	else
-	{
 		*line = ft_strdup(*tmp);
-		ft_strdel(keep);
-	}
 	ft_strdel(tmp);
 	return (0);
 }
@@ -82,13 +78,13 @@ int		get_next_line(int const fd, char **line)
 	char		*tmp;
 	ssize_t		ret;
 
-	tmp = ft_strnew(BUFF_SIZE);
-	if (tmp == NULL)
-		return (-1);
 	if (keep)
 		tmp = ft_strdup(keep);
-	if (gnl_read(&ret, &fd, &tmp) == -1)
+	else
+		tmp = ft_strnew(BUFF_SIZE);
+	if (tmp == NULL || gnl_read(&ret, &fd, &tmp) == -1)
 		return (-1);
+	ft_strdel(&keep);
 	gnl_write(&tmp, line, &keep);
 	if (ret != BUFF_SIZE && keep == NULL)
 		return (0);
