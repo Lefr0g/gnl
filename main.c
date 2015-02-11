@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <fcntl.h>
 #include "get_next_line.h"
-
+/*
 int	gnl_loop(int fd, char **line)
 {
 	while (get_next_line(fd, line))
@@ -30,8 +30,8 @@ int	gnl_loop(int fd, char **line)
 	}
 	return (0);
 }
-
-int	run_gnl(int fd, char **line)
+*/
+int	run_gnl(int fd, char **line, int maxrun)
 {
 	int	ret;
 	int	i;
@@ -42,7 +42,7 @@ int	run_gnl(int fd, char **line)
 	i = 0;
 	ret = get_next_line(fd, line);
 	ft_putstr("Main >> First GNL success\n");
-	while (ret == 1)
+	while (ret == 1 && (!maxrun || i < maxrun))
 	{
 		ft_putstr("Main >> GNL run ");
 		ft_putnbr(i);
@@ -110,20 +110,36 @@ int file_opening(char *str, int *fd)
 	return (0);
 }
 
+int	file_closing(int fd)
+{
+	ft_putstr("Main >> Closing file descriptor ");
+	ft_putnbr(fd);
+	ft_putstr("...\n");
+	if (close(fd))
+	{
+		ft_putstr("Main >> Close failed, end of test.\n");
+		return (1);
+	}
+	ft_putstr("Main >> File successfully closed.\n");
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	int		fd;
 	int		i;
+	int		j;
 	char	*line;
+	int		*multifd;
 
 //	line = ft_strnew(BUFF_SIZE);
 	line = "Hello";
-	i = 1;
+	i = 0;
 	if (argc == 1)
 	{
-		ft_putstr("Main >> Error : Please enter a parameter.\n");
+		ft_putstr("Main >> Error : Please enter at least one parameter.\n");
 		ft_putstr("     >>> Help : Try 'file_name' to read from a file, or 'stdin' from standard input.\n");
-		ft_putstr("     >>> Example : ./test_gnl fichier0\n");
+		ft_putstr("     >>> Example : ./test_gnl fichier0 fichier1\n");
 	}
 	else if (argc == 2)
 	{
@@ -133,31 +149,37 @@ int	main(int argc, char **argv)
 		{
 			if (file_opening(argv[1], &fd))
 				return (1);
-			run_gnl(fd, &line);
-			ft_putstr("Main >> Closing file...\n");
-			if (close(fd) != 0)
-			{
-				ft_putstr("Main >> Close failed, end of test.\n");
-				return (1);
-			}
-			ft_putstr("Main >> File successfully closed.\n");
-			i++;
+			run_gnl(fd, &line, 0);
+			if (file_closing(fd))
+				return (0);
 		}
 	}
 	else
 	{
-		while (i < argc)
+		multifd = (int*)malloc(sizeof(int) * (argc - 1));
+		while (i + 1 < argc)
 		{
-			if (file_opening(argv[i], &fd))
+			if (file_opening(argv[i + 1], &multifd[i]))
 				return (1);
-			run_gnl(fd, &line);
-			ft_putstr("Main >> Closing file...\n");
-			if (close(fd) != 0)
-			{
-				ft_putstr("Main >> Close failed, end of test.\n");
-				return (1);
-			}
-			ft_putstr("Main >> File successfully closed.\n");
+			i++;
+		}
+		i = 0;
+		j = 0;
+		while (!run_gnl(multifd[i], &line, 3) && j < 10)
+		{
+			ft_putstr("Main >> Above is Multiple fd test, run ");
+			ft_putnbr(j);
+			ft_putchar('\n');
+			i++;
+			if (i + 1 == argc)
+				i = 0;
+			j++;
+		}
+		i = 0;
+		while (i + 1 < argc)
+		{
+			if (file_closing(multifd[i]))
+				return (0);
 			i++;
 		}
 	}
